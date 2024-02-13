@@ -108,12 +108,12 @@ allprojects {
                 url = uri("$ciApiv4Url/projects/$projectId/packages/maven")
                 // See Gradle docs for how to provide credentials to PasswordCredentials
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
-                credentials(HttpHeaderCredentials::class) {
-                    name = "Deploy-Token"
-                    value = System.getenv("GITLAB_TOKEN")
+                credentials(PasswordCredentials::class) {
+                    username = System.getenv("GITLAB_USERNAME")
+                    password = System.getenv("GITLAB_TOKEN")
                 }
                 authentication {
-                    create<HttpHeaderAuthentication>("header")
+                    create("basic", BasicAuthentication::class)
                 }
             }
         }
