@@ -7,6 +7,7 @@ plugins {
 
     // In general, keep this version in sync with upstream. Sometimes a newer version than upstream might work, but an older version is extremely likely to break.
     id("io.papermc.paperweight.patcher") version "1.5.11"
+    signing
 }
 
 val paperMavenPublicUrl = "https://repo.papermc.io/repository/maven-public/"
@@ -27,6 +28,7 @@ dependencies {
 allprojects {
     apply(plugin = "java")
     apply(plugin = "maven-publish")
+    apply(plugin = "signing")
 
     java {
         toolchain {
@@ -84,9 +86,12 @@ paperweight {
 tasks.generateDevelopmentBundle {
     apiCoordinates = "net.onelitefeather.onelitepaper:onelitepaper-api"
     mojangApiCoordinates = "io.papermc.paper:paper-mojangapi"
+    val ciApiv4Url = System.getenv("GITLAB_API_URL")
+    val projectId = System.getenv("GITLAB_PROJECT_ID")
     libraryRepositories = listOf(
         "https://repo.maven.apache.org/maven2/",
         paperMavenPublicUrl,
+        "$ciApiv4Url/projects/$projectId/packages/maven"
         // "https://my.repo/", // This should be a repo hosting your API (in this example, 'com.example.paperfork:forktest-api')
     )
 }
@@ -97,11 +102,19 @@ allprojects {
     publishing {
         repositories {
             maven {
-                name = "myRepoSnapshots"
-                url = uri("https://my.repo/")
+                name = "Gitlab"
+                val ciApiv4Url = System.getenv("GITLAB_API_URL")
+                val projectId = System.getenv("GITLAB_PROJECT_ID")
+                url = uri("$ciApiv4Url/projects/$projectId/packages/maven")
                 // See Gradle docs for how to provide credentials to PasswordCredentials
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
-                credentials(PasswordCredentials::class)
+                credentials(HttpHeaderCredentials::class) {
+                    name = "github"
+                    value = System.getenv("GITLAB_TOKEN")
+                }
+                authentication {
+                    create<HttpHeaderAuthentication>("header")
+                }
             }
         }
     }
@@ -117,4 +130,14 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    isRequired = System.getenv("CI") != null
+
+    val privateKey = System.getenv("GPG_PRIVATE_KEY")
+    val keyPassphrase = System.getenv()["GPG_PASSPHRASE"]
+    useInMemoryPgpKeys(privateKey, keyPassphrase)
+
+    sign(publishing.publications)
 }

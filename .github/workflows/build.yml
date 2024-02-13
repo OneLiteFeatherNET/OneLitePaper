@@ -10,6 +10,12 @@ jobs:
     # Only run on PRs if the source branch is on someone else's repo
     if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
     runs-on: ubuntu-latest
+    env:
+      GPG_PRIVATE_KEY: ${{ secrets.ONELITEFEATHER_GPG_KEY }}
+      GPG_PASSPHRASE: ${{ secrets.ONELITEFEATHER_GPG_PASSWORD }}
+      GITLAB_API_URL: ${{ secrets.GITLAB_API_URL }}
+      GITLAB_PROJECT_ID: ${{ secrets.GITLAB_PROJECT_ID }}
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
     steps:
       - name: Checkout Git Repository
         uses: actions/checkout@v3
@@ -28,3 +34,8 @@ jobs:
         run: ./gradlew applyPatches
       - name: Build
         run: ./gradlew build
+      - name: Publish API
+        run: ./gradle :onelitepaper-API:publishMavenPublicationToGitlabRepository
+      - name: Publish DevBundle
+        run: ./gradle publishDevBundlePublicationToGitlabRepository -PpublishDevBundle
+
