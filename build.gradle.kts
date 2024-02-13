@@ -109,7 +109,7 @@ allprojects {
                 // See Gradle docs for how to provide credentials to PasswordCredentials
                 // https://docs.gradle.org/current/samples/sample_publishing_credentials.html
                 credentials(HttpHeaderCredentials::class) {
-                    name = "github"
+                    name = "Deploy-Token"
                     value = System.getenv("GITLAB_TOKEN")
                 }
                 authentication {
