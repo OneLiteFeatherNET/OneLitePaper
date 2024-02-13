@@ -5,7 +5,7 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 58da26ad2f128ba0b66f86820f60853f4be352f0..a75ef4232a52fc0384e3e24e294e53f21d8488a9 100644
+index 58da26ad2f128ba0b66f86820f60853f4be352f0..ca7122d119d5e1ab39198b1df646037b6270d424 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -13,8 +13,14 @@ configurations.named(log4jPlugins.compileClasspathConfigurationName) {
@@ -19,8 +19,8 @@ index 58da26ad2f128ba0b66f86820f60853f4be352f0..a75ef4232a52fc0384e3e24e294e53f2
 +    implementation("io.papermc.paper:paper-mojangapi:1.20.2-R0.1-SNAPSHOT") {
 +        exclude("io.papermc.paper", "paper-api")
 +    }
-+    implementation("com.fasterxml.jackson.core:jackson-core:2.22.1")
-+    implementation("com.fasterxml.jackson.core:jackson-databind:2.22.1")
++    implementation("com.fasterxml.jackson.core:jackson-core:2.16.1")
++    implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
 +    // OneLitePaper end
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
