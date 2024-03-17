@@ -76,6 +76,12 @@ paperweight {
             patchDir = layout.projectDirectory.dir("patches/generatedApi")
             outputDir = layout.projectDirectory.dir("paper-api-generator/generated")
         }
+        patchTasks.register("mojangApi") {
+            isBareDirectory.set(true)
+            upstreamDirPath.set("Paper-MojangAPI")
+            patchDir.set(layout.projectDirectory.dir("patches/mojangapi"))
+            outputDir.set(layout.projectDirectory.dir("onelitepaper-mojangapi"))
+        }
     }
 }
 
