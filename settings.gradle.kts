@@ -1,3 +1,4 @@
+import java.util.*
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -11,4 +12,28 @@ plugins {
 
 rootProject.name = "OneLitePaper"
 
-include("onelitepaper-api", "onelitepaper-server")
+for (name in listOf("onelitepaper-api", "onelitepaper-server", "onelitepaper-mojangapi")) {
+    val projName = name.lowercase(Locale.ENGLISH)
+    include(projName)
+    findProject(":$projName")!!.projectDir = file(name)
+}
+
+fun optionalInclude(name: String, op: (ProjectDescriptor.() -> Unit)? = null) {
+    val settingsFile = file("$name.settings.gradle.kts")
+    if (settingsFile.exists()) {
+        apply(from = settingsFile)
+        findProject(":$name")?.let { op?.invoke(it) }
+    } else {
+        settingsFile.writeText(
+            """
+            // Uncomment to enable the '$name' project
+            // include(":$name")
+
+            """.trimIndent()
+        )
+    }
+}
+
+optionalInclude("test-plugin")
+include("test-plugin")
+include("test-plugin")
