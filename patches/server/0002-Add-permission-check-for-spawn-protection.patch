@@ -18,23 +18,14 @@ index f2e30d8743a97c0541808dc5c03300c0d881b843..9c1b6e15c7f6b366a07c6cd774d045ea
          public CompressionFormat compressionFormat = CompressionFormat.ZLIB;
  
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 68d268b6fff126e8645b6deec3fb549ea2286b77..738356816d1422119a7e9942b9d930888dcbbf92 100644
+index 68d268b6fff126e8645b6deec3fb549ea2286b77..39d5cad76cf478fa7a40d44f89636eace46f8bb5 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -19,6 +19,8 @@ import java.util.Locale;
- import java.util.Optional;
- import java.util.function.BooleanSupplier;
- import javax.annotation.Nullable;
-+
-+import io.papermc.paper.configuration.GlobalConfiguration;
- import net.minecraft.DefaultUncaughtExceptionHandler;
- import net.minecraft.DefaultUncaughtExceptionHandlerWithName;
- import net.minecraft.SharedConstants;
-@@ -575,6 +577,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -575,6 +575,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
              return false;
          } else if (this.getPlayerList().isOp(player.getGameProfile())) {
              return false;
-+        } else if (GlobalConfiguration.get().unsupportedSettings.allowOverrideOpBehaviorForSpawnProtection && player.getBukkitEntity().hasPermission("bukkit.environment.spawnprotection.ignore")) { // OneLitePaper start -  Add permission check for spawn protection
++        } else if (io.papermc.paper.configuration.GlobalConfiguration.get().unsupportedSettings.allowOverrideOpBehaviorForSpawnProtection && player.getBukkitEntity().hasPermission("bukkit.environment.spawnprotection.ignore")) { // OneLitePaper start -  Add permission check for spawn protection
 +            return false; // OneLitePaper end -  Add permission check for spawn protection
          } else if (this.getSpawnProtectionRadius() <= 0) {
              return false;
